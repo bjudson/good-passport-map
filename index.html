@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Passport map</title>
+    <link type='text/css' rel='stylesheet' href='css/app.css'/>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="menu">
+            <ul>
+                <li><a href="#visa-rank" class="attr-select" data-attribute="visa-rank">Passport rank</a></li>
+                <li><a href="#cl" class="attr-select" data-attribute="gdp-cap">GDP/capita</a></li>
+                <li><a href="#pr" class="attr-select" data-attribute="pol-rights">Political rights</a></li>
+                <li><a href="#cl" class="attr-select" data-attribute="civil-libs">Civil liberties</a></li>
+            </ul>
+        </div>
+        <h1>Passport Map</h1>
+        <div id="map" class="map-container">
+        </div>
+    </div>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
