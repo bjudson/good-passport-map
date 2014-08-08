@@ -82,7 +82,8 @@ function drawMap(world) {
       .enter().append("path")
       .attr("class", "country")
       .attr("id", function(d) { return "code_" + d.properties.id; }, true)
-      .attr("d", path);
+      .attr("d", path)
+      .on("click", function(d){ countryInfo(d); });
 
     var dataRange = getDataRange();
     d3.selectAll('.country')
@@ -133,6 +134,18 @@ function getDataRange() {
       }
   });
   return [min,max];
+}
+
+function countryInfo(d) {
+  var properties = ['civil-libs', 'visa-access', 'visa-rank', 'gdp-cap'];
+
+  d3.select('.country-name').text(d.properties.admin);
+  for(p in properties){
+    var prop = properties[p];
+
+    d3.select('#country-info li.' + prop + ' span').text(d.properties[prop])
+  }
+  d3.select('#country-info').style('display', 'block');
 }
 
 function animateMap() {
