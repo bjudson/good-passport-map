@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>Passport map</title>
-    <link type='text/css' rel='stylesheet' href='css/app.css'/>
+    <link type='text/css' rel='stylesheet' href='css/app.css?v=2'/>
 </head>
 
 <body>
     <div class="wrapper">
         <div class="menu">
             <ul>
-                <li><a href="#visa-rank" class="attr-select" data-attribute="visa-rank">Passport rank</a></li>
+                <li><a href="#visa-rank" class="attr-select selected" data-attribute="visa-rank">Passport rank</a></li>
                 <li><a href="#visa-access" class="attr-select" data-attribute="visa-access">Passport access</a></li>
                 <li><a href="#gdp" class="attr-select" data-attribute="gdp-cap">GDP/capita</a></li>
                 <li><a href="#cl" class="attr-select" data-attribute="civil-libs">Civil liberties</a></li>
@@ -24,7 +24,7 @@
                     <li class="visa-rank">Passport rank: <span></span></li>
                     <li class="visa-access">Passport access: <span></span></li>
                     <li class="civil-libs">Civil liberties: <span></span></li>
-                    <li class="gdp-cap">GDP/capita: <span></span></li>
+                    <li class="gdp-cap">GDP/capita: <span></span> USD</li>
                 </ul>
             </div>
         </div>
@@ -34,6 +34,6 @@
     <script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="http://d3js.org/topojson.v1.min.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/app.js?v=2"></script>
 </body>
 </html>

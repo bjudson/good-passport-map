@@ -10,12 +10,13 @@ function init() {
 
 function setMap() {
 
-  width = 1000, height = 650;
+  var width = 1000, 
+      height = 650;
 
   projection = d3.geo.mercator()
     .scale((width + 1) / 2 / Math.PI)
     .translate([width / 2, height / 2])
-    .precision(.1);
+    .precision(0.1);
 
   path = d3.geo.path()
       .projection(projection);
@@ -44,12 +45,10 @@ function setMap() {
 }
 
 function loadData() {
-
-  queue()   // queue function loads all external data files asynchronously 
-    .defer(d3.json, "data/world-topo.json")  // our geometries
-    .defer(d3.csv, "data/country-data.csv")  // and associated data in csv file
-    .await(processData);   // once all files are loaded, call the processData function passing
-                           // the loaded objects as arguments
+  queue()
+    .defer(d3.json, "data/world-topo.json") 
+    .defer(d3.csv, "data/country-data.csv")
+    .await(processData);
 }
 
 function processData(error,world,countryData) {
@@ -93,19 +92,17 @@ function drawMap(world) {
 }
 
 function sequenceMap() {
-  
     var dataRange = getDataRange();
     d3.selectAll('.country').transition() 
       .duration(750) 
       .attr('fill-opacity', function(d) {
         return getColor(d.properties[attributeArray[currentAttribute]], dataRange, attributeArray[currentAttribute]);
-      })
-
+      });
 }
 
 function getColor(valueIn, valuesIn, attribute) {
   var reverse = ['pol-rights', 'civil-libs'],
-      range = reverse.indexOf(attribute) > -1 ? [1,.2] : [.2,1];
+      range = reverse.indexOf(attribute) > -1 ? [1, 0.2] : [0.2, 1];
 
   if(typeof valueIn === 'undefined'){
     return 0.05;
@@ -125,12 +122,17 @@ function getDataRange() {
   var min = Infinity, max = -Infinity;  
   d3.selectAll('.country')
     .each(function(d,i) {
-      var currentValue = d.properties[attributeArray[currentAttribute]];
-      if(currentValue <= min && currentValue != -99 && currentValue != 'undefined') {
+      var currentValue = d.properties[attributeArray[currentAttribute]],
+          upper = {'gdp-cap': 80000};
+      if(currentValue <= min && currentValue !== '' && currentValue != 'undefined') {
         min = currentValue;
       }
-      if(currentValue >= max && currentValue != -99 && currentValue != 'undefined') {
-        max = currentValue;
+      if(currentValue >= max && currentValue !== '' && currentValue != 'undefined') {
+        if(currentValue >= upper[attributeArray[currentAttribute]]){
+          max = upper[attributeArray[currentAttribute]];
+        }else{
+          max = currentValue;
+        }
       }
   });
   return [min,max];
@@ -140,19 +142,18 @@ function countryInfo(d) {
   var properties = ['civil-libs', 'visa-access', 'visa-rank', 'gdp-cap'];
 
   d3.select('.country-name').text(d.properties.admin);
-  for(p in properties){
+  for(var p in properties){
     var prop = properties[p];
-
-    d3.select('#country-info li.' + prop + ' span').text(d.properties[prop])
+    d3.select('#country-info li.' + prop + ' span').text(d.properties[prop]);
   }
-  d3.select('#country-info').style('display', 'block');
+  d3.select('#country-info').style('opacity', '.9');
 }
 
 function animateMap() {
   d3.selectAll('.attr-select')  
-    .on('click', function() {
+    .on('click', function(d, i) {
       d3.selectAll('.attr-select').classed('selected', false);
-      //this.classed('selected', true);
+      this.className += ' selected';
       currentAttribute = attributeArray.indexOf(this.dataset.attribute);
       sequenceMap();
   });
