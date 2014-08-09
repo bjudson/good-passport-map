@@ -6,6 +6,13 @@ var width, height, projection, path, graticule, svg, attributeArray = [], curren
 function init() {
     setMap();
     animateMap();
+    svgPanZoom('#map svg', {
+      fit: false,
+      center: true,
+      minZoom: 1,
+      maxZoom: 3,
+      controlIconsEnabled: true
+    }).panBy({y: 530});
 }
 
 function setMap() {
@@ -25,7 +32,9 @@ function setMap() {
 
   svg = d3.select("#map").append("svg")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .append("g")
+      .classed("viewport", true);
 
   svg.append("defs").append("path")
       .datum({type: "Sphere"})
