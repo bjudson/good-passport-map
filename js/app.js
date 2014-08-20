@@ -17,8 +17,10 @@ function init() {
 
 function setMap() {
 
-  var width = 1000, 
-      height = 650;
+  var width = document.getElementById('map').offsetWidth, 
+      height = width * .65;
+
+  document.getElementById('map').style.height = height + 'px';
 
   projection = d3.geo.mercator()
     .scale((width + 1) / 2 / Math.PI)
