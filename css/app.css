@@ -72,25 +72,38 @@ ul:last-child, p:last-child {
 #country-info {
     opacity: 0;
     position: absolute;
-    top: 400px;
-    left: 40px;
-    width: 150px;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    padding: 8px;
-    box-shadow: 2px 2px 2px #ccc;
+    bottom: 0;
+    left: 0;
+    padding: 15px;
     transition: opacity .3s ease;
 }
 
-#country-info ul {
-    list-style: none;
-    padding: 0;
+#country-info div {
     font-size: .8em;
+    float: left;
+    margin-right: 30px;
+    color: #666;
+}
+
+#country-info i {
+    font-size: 2em;
+    color: indianred;
+    opacity: .6;
+}
+
+#country-info .visa-access i {
+    -webkit-transform: rotate(-180deg);
+}
+
+#country-info span.number {
+    font-size: 2.6em;
+    padding-left: 10px;
+    color: indianred;
 }
 
 .country-name {
-    font-size: .9em;
+    font-size: 1.2em;
+    margin-bottom: 15px;
     color: indianred;
 }
 
@@ -121,12 +134,20 @@ ul:last-child, p:last-child {
     stroke-width: .5px;
 }
 .country {
-    fill: steelblue;
     stroke: white;
     cursor: pointer;
     transition: fill .2s ease;
 }
 
-.country:hover {
+.visa-rank .country {
+    fill: steelblue;
+}
+
+.visa-access .country {
     fill: indianred;
+}
+
+.country:hover {
+    fill: #666;
+    opacity: 1;
 }
