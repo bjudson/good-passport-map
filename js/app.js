@@ -155,7 +155,7 @@ function countryInfo(d) {
   d3.select('.country-name').text(d.properties.admin);
   for(var p in properties){
     var prop = properties[p];
-    d3.select('#country-info li.' + prop + ' span').text(d.properties[prop]);
+    d3.select('#country-info .' + prop + ' .number').text(d.properties[prop]);
   }
   d3.select('#country-info').style('opacity', '.9');
 }

@@ -139,15 +139,11 @@ ul:last-child, p:last-child {
     transition: fill .2s ease;
 }
 
-.visa-rank .country {
+.country {
     fill: steelblue;
 }
 
-.visa-access .country {
-    fill: indianred;
-}
-
 .country:hover {
-    fill: #666;
+    fill: indianred;
     opacity: 1;
 }
