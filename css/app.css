@@ -47,10 +47,16 @@ ul:last-child, p:last-child {
     cursor: normal;
 }
 
-.menu li a.selected:hover {
+.menu li a.selected.rank-select {
+    color: whitesmoke;
+    background: steelblue;
+    cursor: normal;
+}
+
+/*.menu li a.selected:hover {
     color: whitesmoke;
     background: indianred;
-}
+}*/
 
 .wrapper {
     max-width: 1000px;
@@ -87,30 +93,45 @@ ul:last-child, p:last-child {
 
 #country-info i {
     font-size: 2em;
-    color: indianred;
+    color: steelblue;
     opacity: .6;
+    -webkit-transform: rotate(20deg);
+    -moz-transform: rotate(20deg);
+    -ms-transform: rotate(20deg);
+    -o-transform: rotate(20deg);
+    transform: rotate(20deg);
 }
 
 #country-info .visa-access i {
-    -webkit-transform: rotate(-180deg);
+    color: indianred;
+    -webkit-transform: rotate(-160deg);
+    -moz-transform: rotate(-160deg);
+    -ms-transform: rotate(-160deg);
+    -o-transform: rotate(-160deg);
+    transform: rotate(-160deg);
 }
 
 #country-info span.number {
+    text-shadow: 1px 1px 1px #fff;
     font-size: 2.6em;
     padding-left: 10px;
     color: indianred;
 }
 
+#country-info .visa-rank span.number {
+    color: steelblue;
+}
+
 .country-name {
-    font-size: 1.2em;
+    font-size: 1.4em;
     margin-bottom: 15px;
-    color: indianred;
+    color: #444;
 }
 
 .stroke {
     fill: none;
     stroke: #888;
-    stroke-width: 2px;
+    stroke-width: 0;
 }
 
 .fill {
@@ -124,26 +145,19 @@ ul:last-child, p:last-child {
     stroke-opacity: .2;
 }
 
-.land {
-    fill: #222;
-}
-
-.boundary {
-    fill: none;
-    stroke: #fff;
-    stroke-width: .5px;
-}
 .country {
-    stroke: white;
+    stroke: none;
     cursor: pointer;
     transition: fill .2s ease;
 }
 
 .country {
-    fill: steelblue;
+    fill: whitesmoke;
+    opacity: .8;
 }
 
 .country:hover {
-    fill: indianred;
+    stroke-width: .5px;
+    stroke: #333;
     opacity: 1;
 }

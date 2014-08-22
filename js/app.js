@@ -18,7 +18,8 @@ function init() {
 function setMap() {
 
   var width = document.getElementById('map').offsetWidth, 
-      height = width * .65;
+      height = width * .65,
+      defs;
 
   document.getElementById('map').style.height = height + 'px';
 
@@ -86,20 +87,54 @@ function processData(error,world,countryData) {
 }
 
 function drawMap(world) {
+  var rankRange = [28, 173],
+      accessRange = [0, 194];
 
-    svg.selectAll(".country")
-      .data(topojson.feature(world, world.objects.countries).features)
-      .enter().append("path")
-      .attr("class", "country")
-      .attr("id", function(d) { return "code_" + d.properties.id; }, true)
-      .attr("d", path)
-      .on("click", function(d){ countryInfo(d); });
+  svg.selectAll(".country")
+    .data(topojson.feature(world, world.objects.countries).features)
+    .enter().append("path")
+    .attr("class", "country")
+    .attr("id", function(d) { return "code_" + d.properties.id; }, true)
+    .attr("filter", function(d){
+      var filterId = "filter-" + d.properties.id,
+          opacityAccess = getColor(d.properties['visa-access'], accessRange, 'visa-access'),
+          opacityRank = getColor(d.properties['visa-rank'], rankRange, 'visa-rank'),
+          filter = svg.select("defs").append("filter").attr("id", filterId);
 
-    var dataRange = getDataRange();
-    d3.selectAll('.country')
-    .attr('fill-opacity', function(d) {
-        return getColor(d.properties[attributeArray[currentAttribute]], dataRange);
-    });
+      filter.attr("x", "0")
+          .attr("y", "0");
+
+      filter.append("feFlood")
+          .attr("flood-color", "steelblue")
+          .attr("flood-opacity", opacityRank)
+          .attr("result", "floodBlue")
+          .classed("floodBlue", true);
+
+      filter.append("feFlood")
+          .attr("flood-color", "firebrick")
+          .attr("flood-opacity", opacityAccess)
+          .classed("floodRed", true);
+
+      filter.append("feBlend")
+          .attr("mode", "multiply")
+          .attr("in2", "floodBlue")
+          .attr("result", "multiply");
+
+      filter.append("feComposite")
+          .attr("in", "multiply")
+          .attr("in2", "SourceGraphic")
+          .attr("operator", "atop");
+
+      return "url(#" + filterId + ")"; 
+    })
+    .attr("d", path)
+    .on("click", function(d){ countryInfo(d); });
+
+  // var dataRange = getDataRange();
+  // d3.selectAll('.country')
+  //   .attr('fill-opacity', function(d) {
+  //     return getColor(d.properties[attributeArray[currentAttribute]], dataRange);
+  //   });
 }
 
 function sequenceMap() {
@@ -126,47 +161,88 @@ function getColor(valueIn, valuesIn, attribute) {
   return color(valueIn);
 }
 
-function getDataRange() {
+function getDataRange(attribute) {
   // function loops through all the data values from the current data attribute
   // and returns the min and max values
 
   var min = Infinity, max = -Infinity;  
+
   d3.selectAll('.country')
     .each(function(d,i) {
-      var currentValue = d.properties[attributeArray[currentAttribute]],
-          upper = {'gdp-cap': 80000};
+      var currentValue;
+
+      if(typeof attribute !== 'undefined'){
+        currentValue = d.properties[attribute];
+      }else{
+        d.properties[attributeArray[currentAttribute]]
+      }
+
       if(currentValue <= min && currentValue !== '' && currentValue != 'undefined') {
         min = currentValue;
       }
       if(currentValue >= max && currentValue !== '' && currentValue != 'undefined') {
-        if(currentValue >= upper[attributeArray[currentAttribute]]){
-          max = upper[attributeArray[currentAttribute]];
-        }else{
-          max = currentValue;
-        }
+        max = currentValue;
       }
   });
   return [min,max];
 }
 
 function countryInfo(d) {
-  var properties = ['civil-libs', 'visa-access', 'visa-rank', 'gdp-cap'];
+  var properties = ['visa-access', 'visa-rank'];
 
   d3.select('.country-name').text(d.properties.admin);
   for(var p in properties){
-    var prop = properties[p];
-    d3.select('#country-info .' + prop + ' .number').text(d.properties[prop]);
+    var prop = properties[p],
+        value = d.properties[prop];
+
+    if(typeof value == 'undefined'){
+      value = 'N/A';
+    }
+    d3.select('#country-info .' + prop + ' .number').text(value);
   }
   d3.select('#country-info').style('opacity', '.9');
 }
 
 function animateMap() {
+  var rankRange = [28, 173],
+      accessRange = [0, 194];
+
   d3.selectAll('.attr-select')  
     .on('click', function(d, i) {
-      d3.selectAll('.attr-select').classed('selected', false);
-      this.className += ' selected';
-      currentAttribute = attributeArray.indexOf(this.dataset.attribute);
-      sequenceMap();
+      var selected = this.className.indexOf("selected") > -1;
+
+      if(selected){
+        if(this.dataset.attribute === "visa-rank"){
+          d3.selectAll('.floodBlue')
+            .attr("flood-opacity", "0");
+        }else if(this.dataset.attribute === "visa-access"){
+          d3.selectAll('.floodRed')
+            .attr("flood-opacity", "0");
+        }
+
+        this.className = this.className.replace("selected", "");
+      }else{
+        if(this.dataset.attribute === "visa-rank"){
+          var attribute = this.dataset.attribute,
+              floodClass = 'floodBlue',
+              range = rankRange;
+        }else if(this.dataset.attribute === "visa-access"){
+          var attribute = this.dataset.attribute,
+              floodClass = 'floodRed',
+              range = accessRange;
+        }
+
+        d3.selectAll('.country')
+          .each(function(d,i){
+            d3.selectAll('#filter-' + d.properties.id + ' .' + floodClass)
+              .attr("flood-opacity", function(){
+                return getColor(d.properties[attribute], range, attribute);
+              });
+          });
+
+        this.className += " selected";
+      }
+
   });
 }
 
