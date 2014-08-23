@@ -1,18 +1,42 @@
 // Heavily based on:
 // http://bl.ocks.org/rgdonohue/9280446
 
-var width, height, projection, path, graticule, svg, attributeArray = [], currentAttribute = 0, playing = false;
+var map, width, height, projection, path, graticule, svg, attributeArray = [], currentAttribute = 0, playing = false;
 
 function init() {
     setMap();
     animateMap();
-    svgPanZoom('#map svg', {
+    map = svgPanZoom('#map svg', {
       fit: false,
       center: true,
       minZoom: 1,
       maxZoom: 3,
-      controlIconsEnabled: true
-    }).panBy({y: 530});
+      //controlIconsEnabled: true
+    });
+
+    map.panBy({y: 530});
+
+    function zoomInMap() {
+      map.zoomIn();
+    }
+
+    function zoomOutMap() {
+      map.zoomOut();
+    }
+
+    function resetMap() {
+      map.resetZoom();
+      d3.select('#country-info').style('opacity', '0');
+    }
+
+    d3.selectAll('.zoom-in')  
+      .on('click', zoomInMap);
+
+    d3.selectAll('.zoom-out')  
+      .on('click', zoomOutMap);
+
+    d3.selectAll('.reset')  
+      .on('click', resetMap);
 }
 
 function setMap() {
@@ -86,9 +110,14 @@ function processData(error,world,countryData) {
   drawMap(world);
 }
 
+/** 
+ * Adds all country paths to the map, and generates filters for coloring them.
+ * @param {object} world - object imported from json
+ */
+
 function drawMap(world) {
-  var rankRange = [28, 173],
-      accessRange = [0, 194];
+  var rankRange = [],
+      accessRange = [];
 
   svg.selectAll(".country")
     .data(topojson.feature(world, world.objects.countries).features)
@@ -96,10 +125,24 @@ function drawMap(world) {
     .attr("class", "country")
     .attr("id", function(d) { return "code_" + d.properties.id; }, true)
     .attr("filter", function(d){
-      var filterId = "filter-" + d.properties.id,
-          opacityAccess = getColor(d.properties['visa-access'], accessRange, 'visa-access'),
+      return "url(#filter-" + d.properties.id + ")"; 
+    })
+    .attr("d", path)
+    .on("click", function(d){ countryInfo(d); });
+
+  rankRange = getDataRange('visa-rank');
+  accessRange = getDataRange('visa-access');
+
+  // Create a filter for each country. This isn't ideal (because we end up with ~200 filters), but I 
+  // can't find another way to implement a multiply effect that uses interpolated values.
+  // Each filter generates a color for access and a color for rank using feFlood, and flood-opacity as
+  // the interpolated variable. The resulting colors are blended with a multiply effect, then clipped 
+  // to the bounds of the country path. 
+  d3.selectAll('.country')
+    .each(function(d) {
+      var opacityAccess = getColor(d.properties['visa-access'], accessRange, 'visa-access'),
           opacityRank = getColor(d.properties['visa-rank'], rankRange, 'visa-rank'),
-          filter = svg.select("defs").append("filter").attr("id", filterId);
+          filter = svg.select("defs").append("filter").attr("id", "filter-" + d.properties.id);
 
       filter.attr("x", "0")
           .attr("y", "0");
@@ -111,40 +154,30 @@ function drawMap(world) {
           .classed("floodBlue", true);
 
       filter.append("feFlood")
-          .attr("flood-color", "firebrick")
+          .attr("flood-color", "indianred")
           .attr("flood-opacity", opacityAccess)
           .classed("floodRed", true);
 
+      // Blends the two floods above with a multiply effect
       filter.append("feBlend")
           .attr("mode", "multiply")
           .attr("in2", "floodBlue")
           .attr("result", "multiply");
 
+      // Keeps the shaded area within the bounds of the path
       filter.append("feComposite")
           .attr("in", "multiply")
           .attr("in2", "SourceGraphic")
           .attr("operator", "atop");
-
-      return "url(#" + filterId + ")"; 
-    })
-    .attr("d", path)
-    .on("click", function(d){ countryInfo(d); });
-
-  // var dataRange = getDataRange();
-  // d3.selectAll('.country')
-  //   .attr('fill-opacity', function(d) {
-  //     return getColor(d.properties[attributeArray[currentAttribute]], dataRange);
-  //   });
+    });
 }
 
-function sequenceMap() {
-    var dataRange = getDataRange();
-    d3.selectAll('.country').transition() 
-      .duration(750) 
-      .attr('fill-opacity', function(d) {
-        return getColor(d.properties[attributeArray[currentAttribute]], dataRange, attributeArray[currentAttribute]);
-      });
-}
+/** 
+ * Generates opacity value for fill color based on value and scale
+ * @param valueIn - value we want the color for
+ * @param valuesIn - min / max values for scale
+ * @param attribute - name of attribute
+ */
 
 function getColor(valueIn, valuesIn, attribute) {
   var reverse = ['pol-rights', 'civil-libs'],
@@ -200,7 +233,7 @@ function countryInfo(d) {
     }
     d3.select('#country-info .' + prop + ' .number').text(value);
   }
-  d3.select('#country-info').style('opacity', '.9');
+  d3.select('#country-info').style('opacity', '1');
 }
 
 function animateMap() {

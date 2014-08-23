@@ -1,10 +1,32 @@
 body {
     font-family: helvetica, sans-serif;
-    background: #f4f4f4;
+    background: #fff;
+    font-size: 16px;
 }
 
 h1 {
     margin: 0;
+    font-family: "proxima-nova", helvetica, sans-serif;
+    font-weight: bold;
+}
+
+a {
+    color: indianred;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.copy p {
+    color: #202f33;
+    font-family: "freight-text-pro", georgia, serif;
+    font-weight: 400;
+    font-size: 1.3em;
+    padding-left: 100px;
+    line-height: 2em;
+    -webkit-font-smoothing: antialiased;
 }
 
 ul:last-child, p:last-child {
@@ -14,6 +36,10 @@ ul:last-child, p:last-child {
 .menu {
     float: right;
     padding-top: 10px;
+    font-family: "alternate-gothic-no-1-d", sans-serif;
+    font-weight: 400;
+    font-size: 1.4em;
+    text-transform: uppercase;
 }
 
 .menu ul {
@@ -25,38 +51,42 @@ ul:last-child, p:last-child {
 
 .menu li {
     float: left;
-    margin-right: 10px;
+    margin-right: 0;
+}
+
+.menu li:last-child {
+    margin-right: 0;
+}
+
+.menu li:last-child a {
+    border-left: none;
 }
 
 .menu li a {
-    color: indianred;
-    padding: 5px 8px;
+    color: #333;
+    padding: 4px 8px 2px 8px;
     background: #efefef;
-    border-radius: 2px;
+    border: 1px solid #ddd;
     text-decoration: none;
     transition: all .3s ease;
+}
+
+.menu li a span {
+    color: #ccc;
+    text-shadow: 0 0 4px #fff;
+}
+
+.menu li a.rank-select.selected span {
+    color: steelblue;
+}
+
+.menu li a.access-select.selected span {
+    color: indianred;
 }
 
 .menu li a:hover {
     background: #e1e1e1;
 }
-
-.menu li a.selected {
-    color: whitesmoke;
-    background: indianred;
-    cursor: normal;
-}
-
-.menu li a.selected.rank-select {
-    color: whitesmoke;
-    background: steelblue;
-    cursor: normal;
-}
-
-/*.menu li a.selected:hover {
-    color: whitesmoke;
-    background: indianred;
-}*/
 
 .wrapper {
     max-width: 1000px;
@@ -64,6 +94,10 @@ ul:last-child, p:last-child {
     margin: auto;
     background: #fff;
 }
+
+svg {
+    cursor: all-scroll;
+} 
 
 .map-container {
     margin-top: 20px;
@@ -73,6 +107,48 @@ ul:last-child, p:last-child {
     box-shadow: inset 0 0 200px #ddd;
     position: relative;
     background: url(../img/textured_paper.png);
+}
+
+#map-controls {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    width: 32px;
+    height: 94px;
+    box-shadow: 1px 1px 3px #ccc;
+}
+
+#map-controls a {
+    display: block;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    background: #f3f3f3;
+    line-height: 33px;
+    border: 1px solid #ccc;
+    color: #666;
+    text-decoration: none;
+    font-family: "proxima-nova", helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 1em;
+    transition: all .2s ease;
+}
+
+#map-controls a:first-child {
+    border-bottom: none;
+    line-height: 33px;
+    font-size: 1.2em;
+}
+
+#map-controls a:last-child {
+    border-top: none;
+    line-height: 30px;
+    font-size: 1.2em;
+}
+
+#map-controls a:hover {
+    color: #000;
+    background: #fff;
 }
 
 #country-info {
@@ -88,7 +164,9 @@ ul:last-child, p:last-child {
     font-size: .8em;
     float: left;
     margin-right: 30px;
-    color: #666;
+    color: #202f33;
+    font-family: "freight-text-pro", georgia, serif;
+    font-weight: 400;
 }
 
 #country-info i {
@@ -115,6 +193,8 @@ ul:last-child, p:last-child {
     text-shadow: 1px 1px 1px #fff;
     font-size: 2.6em;
     padding-left: 10px;
+    font-family: "proxima-nova", helvetica, sans-serif;
+    font-weight: bold;
     color: indianred;
 }
 
@@ -160,4 +240,12 @@ ul:last-child, p:last-child {
     stroke-width: .5px;
     stroke: #333;
     opacity: 1;
+}
+
+.floodRed, .floodBlue {
+    -webkit-transition: flood-opacity .3s ease;
+    -moz-transition: flood-opacity .3s ease;
+    -ms-transition: flood-opacity .3s ease;
+    -o-transition: flood-opacity .3s ease;
+    transition: flood-opacity .3s ease;
 }

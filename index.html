@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title>Passport map</title>
-    <link type='text/css' rel='stylesheet' href='css/app.css?v=4'/>
+    <script type="text/javascript" src="//use.typekit.net/fla7qiz.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <link type='text/css' rel='stylesheet' href='css/app.css?v=6'/>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 
@@ -11,17 +13,31 @@
     <div class="wrapper">
         <div class="menu">
             <ul>
-                <li><a href="#visa-rank" class="attr-select rank-select selected" data-attribute="visa-rank">Passport power</a></li>
-                <li><a href="#visa-access" class="attr-select access-select selected" data-attribute="visa-access">Passport access</a></li>
+                <li><a href="javascript:void(0)" class="attr-select rank-select selected" data-attribute="visa-rank"><span>●</span> Passport power</a></li>
+                <li><a href="javascript:void(0)" class="attr-select access-select selected" data-attribute="visa-access"><span>●</span> Passport access</a></li>
             </ul>
         </div>
-        <h1>Passport Map</h1>
+        <h1>Passport Power Interactive</h1>
         <div id="map" class="map-container">
             <div id="country-info">
                 <h1 class="country-name"></h1>
                 <div class="visa-rank">Citizens from here can travel to <br><span><i class="fa fa-plane"></i><span class="number"></span></span> <br>countries without a visa</div>
                 <div class="visa-access">Foreign citizens can travel here from <br><span><i class="fa fa-plane"></i><span class="number"></span></span> <br>countries without a visa</div>
             </div>
+
+            <div id="map-controls">
+                <a href="javascript:void(0)" class="zoom-in">+</a>
+                <a href="javascript:void(0)" class="reset"><i class="fa fa-undo"></i></a>
+                <a href="javascript:void(0)" class="zoom-out">–</a>
+            </div>
+        </div>
+
+        <div class="copy">
+            <p>Before mass the advent of commercial airlines, traveling to distant nations could take weeks. Today it is possible to fly to across the world in less than a day, but that doesn’t mean this option is available to everyone, even those with the means to afford international airfare. Each country has its own visa laws, some of which are quite strict. For citizens of most nations, receiving a travel visa to the United States requires a cumbersome application process and fee. But if you’re carrying a US passport, you can travel without prior approval to the vast majority of other countries. 
+
+            <p>Our infographic “<a href="http://magazine.good.is/infographics/how-powerful-is-your-passport">How Powerful is Your Passport</a>” revealed the range of travel options open to citizens of each country. This interactive adds another layer to the data: the number of foreign passports each country considers worthy of visa-free entry. Countries shaded blue have powerful passports that allow wide-ranging free travel; those shaded red have relatively open policies regarding foreign travelers. The the more purple countries are closer to parity in their freedom to travel and their openness to foreign visitors. This provides a fascinating, if somewhat murky, view into the geopolitics of travel restrictions. Iran allows citizens from 177 other countries to enter without applying for a visa. Iraq only allows visa-free travel from 3 countries. 
+
+            <p>Click on any country to see the power of its passport, and the openness of its borders. Click the “Passport Power” and “Passport Access” buttons to hide either dataset from the map.
         </div>
     </div>
 
@@ -30,6 +46,6 @@
     <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="http://d3js.org/topojson.v1.min.js"></script>
     <script src="js/svg-pan-zoom.min.js"></script>
-    <script src="js/app.js?v=4"></script>
+    <script src="js/app.js?v=6"></script>
 </body>
 </html>
