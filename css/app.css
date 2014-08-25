@@ -4,10 +4,20 @@ body {
     font-size: 16px;
 }
 
+header:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 h1 {
     margin: 0;
     font-family: "proxima-nova", helvetica, sans-serif;
     font-weight: bold;
+}
+
+header h1 {
+    float: left;
 }
 
 a {
@@ -276,6 +286,19 @@ svg {
         margin: 0;
     }
 
+    h1 {
+        float: none;
+    }
+
+    .menu {
+        float: none;
+        font-size: 1em;
+    }
+
+    #map {
+        margin-top: 10px;
+    }
+
     .copy p {
         line-height: 1.5em;
         font-size: 1.1em;
@@ -289,10 +312,31 @@ svg {
         display: none;
         position: relative;
         width: 100%;
+        padding: 5px 0;
+    }
+
+    #country-info:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    #country-info h1 {
+        float: left;
+        margin-bottom: 5px;
+        margin-right: 15px;
+        font-size: 1.2em;
     }
 
     #country-info div {
+        font-size: .5em;
+    }
+
+    #country-info div:first-child {
         float: left;
-        width: 49%;
+    }
+
+    #country-info .pre-info, #country-info .post-info {
+        display: none;
     }
 }

@@ -16,13 +16,15 @@
 
 <body>
     <div class="wrapper">
-        <div class="menu">
-            <ul>
-                <li><a href="javascript:void(0)" class="attr-select rank-select selected" data-attribute="visa-rank"><span>●</span> Passport power</a></li>
-                <li><a href="javascript:void(0)" class="attr-select access-select selected" data-attribute="visa-access"><span>●</span> Passport access</a></li>
-            </ul>
-        </div>
-        <h1>Passport Power Interactive</h1>
+        <header>
+            <h1>Passport Power Interactive</h1>
+            <div class="menu">
+                <ul>
+                    <li><a href="javascript:void(0)" class="attr-select rank-select selected" data-attribute="visa-rank"><span>●</span> Passport power</a></li>
+                    <li><a href="javascript:void(0)" class="attr-select access-select selected" data-attribute="visa-access"><span>●</span> Passport access</a></li>
+                </ul>
+            </div>
+        </header>
 
         <div id="map-wrap">
             <div id="map" class="map-container">
@@ -35,8 +37,8 @@
 
             <div id="country-info">
                 <h1 class="country-name"></h1>
-                <div class="visa-rank">Citizens from here can travel to <br><span><i class="fa fa-plane"></i><span class="number"></span></span> <br>countries without a visa</div>
-                <div class="visa-access">Foreign citizens can travel here from <br><span><i class="fa fa-plane"></i><span class="number"></span></span> <br>countries without a visa</div>
+                <div class="visa-rank"><span class="pre-info">Citizens from here can travel to <br></span><span><i class="fa fa-plane"></i><span class="number"></span></span> <span class="post-info"><br>countries without a visa</div>
+                <div class="visa-access"><span class="pre-info">Foreign citizens can travel here from <br></span><span><i class="fa fa-plane"></i><span class="number"></span></span> <span class="post-info"><br>countries without a visa</span></div>
             </div>
         </div>
 
