@@ -1,49 +1,24 @@
-// Heavily based on:
+// Based on:
 // http://bl.ocks.org/rgdonohue/9280446
 
-var map, width, height, projection, path, graticule, svg, attributeArray = [], currentAttribute = 0, playing = false;
+var width, height, minScale = 1, maxScale = 4, scaleBy = .2, projection, path, graticule, svg, zoom, attributeArray = [], currentAttribute = 0;
+
+/** 
+ * Initializes map
+ */
 
 function init() {
-    setMap();
-    animateMap();
-    map = svgPanZoom('#map svg', {
-      fit: false,
-      center: true,
-      minZoom: 1,
-      maxZoom: 3,
-      //controlIconsEnabled: true
-    });
-
-    map.panBy({y: 530});
-
-    function zoomInMap() {
-      map.zoomIn();
-    }
-
-    function zoomOutMap() {
-      map.zoomOut();
-    }
-
-    function resetMap() {
-      map.resetZoom();
-      d3.select('#country-info').style('opacity', '0');
-    }
-
-    d3.selectAll('.zoom-in')  
-      .on('click', zoomInMap);
-
-    d3.selectAll('.zoom-out')  
-      .on('click', zoomOutMap);
-
-    d3.selectAll('.reset')  
-      .on('click', resetMap);
+    setupMap();
+    mapInteraction();
 }
 
-function setMap() {
+/** 
+ * Creates svg and defines base map info - projection, graticule, etc.
+ */
 
-  var width = document.getElementById('map').offsetWidth, 
-      height = width * .65,
-      defs;
+function setupMap() {
+  width = document.getElementById('map').offsetWidth, 
+  height = width * .65;
 
   document.getElementById('map').style.height = height + 'px';
 
@@ -57,9 +32,12 @@ function setMap() {
 
   graticule = d3.geo.graticule();
 
+  zoom = d3.behavior.zoom().scaleExtent([minScale, maxScale]).on("zoom", zoomed);
+
   svg = d3.select("#map").append("svg")
       .attr("width", width)
       .attr("height", height)
+      .call(zoom)
       .append("g")
       .classed("viewport", true);
 
@@ -80,12 +58,74 @@ function setMap() {
   loadData();
 }
 
+/** 
+ * Main zoom / pan function. See https://github.com/mbostock/d3/wiki/Zoom-Behavior
+ */
+
+function zoomed() {
+  svg.attr("transform", "translate(" + zoom.translate()[0] + " " + zoom.translate()[1] + ") scale(" + zoom.scale() + ")");
+}
+
+/** 
+ * Zooms in map programatically, keeping existing center
+ */
+
+function zoomInMap() {
+  var scale = zoom.scale();
+  if(scale <= maxScale - scaleBy){
+    zoom.scale(scale + scaleBy);
+    zoom.translate([
+      zoom.translate()[0] - (width * scaleBy / 2), 
+      zoom.translate()[1] - (height * scaleBy / 2)
+    ]);
+    zoomed();       
+  }
+}
+
+/** 
+ * Zooms out map programatically, keeping existing center
+ */
+
+function zoomOutMap() {
+  var scale = zoom.scale();
+  if(scale >= minScale + scaleBy){
+    zoom.scale(scale - scaleBy);
+    zoom.translate([
+      zoom.translate()[0] + (width * scaleBy / 2), 
+      zoom.translate()[1] + (height * scaleBy / 2)
+    ]);
+    zoomed();       
+  }
+}
+
+/** 
+ * Resets map to original state
+ */
+
+function resetMap() {
+  zoom.scale(1);
+  zoom.translate([0,0]);
+  zoomed();
+  d3.select("#country-info").style("opacity", "0");
+}
+
+/** 
+ * Loads data files asynchronously using d3 queue plugin
+ */
+
 function loadData() {
   queue()
     .defer(d3.json, "data/world-topo.json") 
     .defer(d3.csv, "data/country-data.csv")
     .await(processData);
 }
+
+/** 
+ * Processes data loaded by loadData(), and calls draw map function
+ * @param {object} error - file loading errors
+ * @param {object} world - object imported from json containing country paths
+ * @param {object} countryData - object imported from csv contraining contry stats
+ */
 
 function processData(error,world,countryData) {
   // function accepts any errors from the queue function as first argument, then
@@ -136,8 +176,9 @@ function drawMap(world) {
   // Create a filter for each country. This isn't ideal (because we end up with ~200 filters), but I 
   // can't find another way to implement a multiply effect that uses interpolated values.
   // Each filter generates a color for access and a color for rank using feFlood, and flood-opacity as
-  // the interpolated variable. The resulting colors are blended with a multiply effect, then clipped 
-  // to the bounds of the country path. 
+  // the interpolated variable. The resulting colors are blended with a multiply effect (feBlend), then
+  // clipped to the bounds of the country path with feComposite. 
+
   d3.selectAll('.country')
     .each(function(d) {
       var opacityAccess = getColor(d.properties['visa-access'], accessRange, 'visa-access'),
@@ -194,6 +235,11 @@ function getColor(valueIn, valuesIn, attribute) {
   return color(valueIn);
 }
 
+/** 
+ * Determines min / max values for any country stat
+ * @param {string} attribute - the stat name e.g. visa-rank
+ */
+
 function getDataRange(attribute) {
   // function loops through all the data values from the current data attribute
   // and returns the min and max values
@@ -207,7 +253,7 @@ function getDataRange(attribute) {
       if(typeof attribute !== 'undefined'){
         currentValue = d.properties[attribute];
       }else{
-        d.properties[attributeArray[currentAttribute]]
+        d.properties[attributeArray[currentAttribute]];
       }
 
       if(currentValue <= min && currentValue !== '' && currentValue != 'undefined') {
@@ -219,6 +265,11 @@ function getDataRange(attribute) {
   });
   return [min,max];
 }
+
+/** 
+ * Populate and display country info 
+ * @param {object} d - data for the country
+ */
 
 function countryInfo(d) {
   var properties = ['visa-access', 'visa-rank'];
@@ -233,12 +284,37 @@ function countryInfo(d) {
     }
     d3.select('#country-info .' + prop + ' .number').text(value);
   }
-  d3.select('#country-info').style('opacity', '1');
+  d3.select('#country-info').style('display', 'block').style('opacity', '1');
 }
 
-function animateMap() {
+/** 
+ * Hides the country info box
+ */
+
+function hideCountryInfo() {
+  d3.select('#country-info').style('display', 'none').style('opacity', '0');
+}
+
+/** 
+ * Sets up map interactions, including ability to show / hide a dataset, use zoom buttons
+ */
+
+function mapInteraction() {
   var rankRange = [28, 173],
       accessRange = [0, 194];
+
+  d3.select(".zoom-in")  
+    .on("click", zoomInMap);
+
+  d3.select(".zoom-out")  
+    .on("click", zoomOutMap);
+
+  d3.select(".reset")  
+    .on("click", resetMap);
+
+  d3.select("#country-info").on("click", function(){
+    hideCountryInfo();
+  });
 
   d3.selectAll('.attr-select')  
     .on('click', function(d, i) {
