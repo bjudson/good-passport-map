@@ -24,7 +24,6 @@ a:hover {
     font-family: "freight-text-pro", georgia, serif;
     font-weight: 400;
     font-size: 1.3em;
-    padding-left: 100px;
     line-height: 2em;
     -webkit-font-smoothing: antialiased;
 }
@@ -99,6 +98,10 @@ svg {
     cursor: all-scroll;
 } 
 
+#map-wrap {
+    position: relative;
+}
+
 .map-container {
     margin-top: 20px;
     width: 100%;
@@ -157,6 +160,7 @@ svg {
     bottom: 0;
     left: 0;
     padding: 15px;
+    background: rgba(255, 255, 255, 0.4);
     transition: opacity .3s ease;
 }
 
@@ -167,6 +171,10 @@ svg {
     color: #202f33;
     font-family: "freight-text-pro", georgia, serif;
     font-weight: 400;
+}
+
+#country-info div:last-child {
+    margin-right: 0;
 }
 
 #country-info i {
@@ -248,4 +256,43 @@ svg {
     -ms-transition: flood-opacity .3s ease;
     -o-transition: flood-opacity .3s ease;
     transition: flood-opacity .3s ease;
+}
+
+@media only screen and (min-device-width : 1023px) {
+    .copy p {
+        padding-left: 100px;
+    }
+}
+
+@media only screen and (max-device-width : 320px) {
+    .menu {
+        font-size: 1em;
+    }
+}
+
+@media only screen and (max-device-width : 480px) {
+    body {
+        padding: 0;
+        margin: 0;
+    }
+
+    .copy p {
+        line-height: 1.5em;
+        font-size: 1.1em;
+    }
+
+    .wrapper {
+        padding: 5px;
+    }
+
+    #country-info {
+        display: none;
+        position: relative;
+        width: 100%;
+    }
+
+    #country-info div {
+        float: left;
+        width: 49%;
+    }
 }
