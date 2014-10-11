@@ -4,7 +4,7 @@ var passportMap;
   // Based on:
   // http://bl.ocks.org/rgdonohue/9280446
 
-  var width, height, minScale = 1, maxScale = 4, scaleBy = .2, projection, path, graticule, svg, zoom, attributeArray = [], currentAttribute = 0;
+  var width, height, powerColor = "#ffd60d", accessColor = "#ef145d", minScale = 1, maxScale = 4, scaleBy = .2, projection, path, graticule, svg, zoom, attributeArray = [], currentAttribute = 0;
 
   /** 
    * Initializes map
@@ -206,13 +206,13 @@ var passportMap;
             .attr("y", "0");
 
         filter.append("feFlood")
-            .attr("flood-color", "steelblue")
+            .attr("flood-color", powerColor)
             .attr("flood-opacity", opacityRank)
             .attr("result", "floodBlue")
             .classed("floodBlue", true);
 
         filter.append("feFlood")
-            .attr("flood-color", "indianred")
+            .attr("flood-color", accessColor)
             .attr("flood-opacity", opacityAccess)
             .classed("floodRed", true);
 
@@ -242,7 +242,7 @@ var passportMap;
         range = reverse.indexOf(attribute) > -1 ? [1, 0.2] : [0.2, 1];
 
     if(typeof valueIn === 'undefined'){
-      return 0.05;
+      return 0;
     }
 
     var color = d3.scale.linear()
